@@ -16,7 +16,7 @@ export default function CodeExplainerUI() {
   };
 
   const handleAIAction = async (mode) => {
-  if (loading) return; // prevent spamming
+  if (loading) return; 
 
   setActiveTab(mode);
   setLoading(true);
@@ -313,7 +313,7 @@ export default function CodeExplainerUI() {
 
         {/* Footer */}
         <footer className="mt-12 text-center text-slate-500 text-sm">
-          <p>Built with React • Powered by AI • Made with ⚡ by you</p>
+          <p>Built with React • Powered by AI • Made with ❤️</p>
         </footer>
       </div>
 
