@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Sparkles, Copy, Check, Rocket } from 'lucide-react';
+import removeMd from "remove-markdown";
 
 const AIExplain = ({ loadingExplain, loadingOptimize, explainedOutput, optimizedOutput, activeTab, setActiveTab, loading }) => {
   const [copied, setCopied] = useState({ explanation: false, optimized: false });
@@ -7,7 +8,7 @@ const AIExplain = ({ loadingExplain, loadingOptimize, explainedOutput, optimized
   const optLoading = loadingOptimize ?? loading;
 
 
-  
+
   const handleCopy = async (which) => {
     try {
       const text = which === 'explanation' ? explainedOutput : optimizedOutput;
@@ -73,7 +74,7 @@ const AIExplain = ({ loadingExplain, loadingOptimize, explainedOutput, optimized
                           <p className="text-slate-400">AI is thinking...</p>
                         ) : (
                           <div className="max-h-64 overflow-y-auto scrollbar-thin rounded-md bg-slate-950/30 p-3 border border-slate-800/40">
-                            <pre className="whitespace-pre-wrap text-slate-300">{explainedOutput}</pre>
+                            <pre className="whitespace-pre-wrap text-slate-300">{removeMd(explainedOutput)}</pre>
                           </div>
                         )}
                       </div>
@@ -115,7 +116,7 @@ const AIExplain = ({ loadingExplain, loadingOptimize, explainedOutput, optimized
                         <p className="text-slate-400">AI is thinking...</p>
                       ) : (
                         <div className="max-h-64 overflow-y-auto scrollbar-thin rounded-md bg-slate-950/30 p-3 border border-slate-800/40">
-                          <pre className="whitespace-pre-wrap text-slate-300">{optimizedOutput}</pre>
+                          <pre className="whitespace-pre-wrap text-slate-300">{removeMd(optimizedOutput)}</pre>
                         </div>
                       )}
                     </div>
