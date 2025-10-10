@@ -21,7 +21,10 @@ export default function CodeExplainerUI() {
 
    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
-
+  const prompt = {
+    explain: `Be casual, conversational. If it's something that a beginner will not understand, give a tiny analogy. Explain this code. Line by line, (you can group multiple lines together) ${code}. Be concise. Be straight forward. Not too long, but also very explanatory. So go like this, for example, Line 1: [Code explanation] Line 2-5: [Code explanation], like that. Use regular markdown convention if you need to go to a new line, or need a tab, or something like that.`,
+    optimize: `Make this code better ${code}. If you can't, leave it like that. No need to say anything, just spit out the bettered code. If there is no way to make it better, spit out the code like that. Use regular markdown convention if you need to go to a new line, or need a tab, or something like that.`
+  }
 
 
   const handleAIAction = async (mode) => {
@@ -34,7 +37,7 @@ export default function CodeExplainerUI() {
     try {
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
-        contents: mode === "explain"? `Explain this code like it could be taught. Line by line, (you can group multiple lines together) ${code}` : `Make this code better, anyway you can ${code}`,
+        contents: mode === "explain"? prompt.explain : prompt.optimize,
       });
       
     

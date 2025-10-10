@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
 import { Sparkles, Copy, Check, Rocket } from 'lucide-react';
-const AIExplain = ({ loading, explainedOutput, optimizedOutput, activeTab, setActiveTab }) => {
-    const [copied, setCopied] = useState({ explanation: false, optimized: false });
-    
-    
-    
+
+const AIExplain = ({ loadingExplain, loadingOptimize, explainedOutput, optimizedOutput, activeTab, setActiveTab, loading }) => {
+  const [copied, setCopied] = useState({ explanation: false, optimized: false });
+  const expLoading = loadingExplain ?? loading;
+  const optLoading = loadingOptimize ?? loading;
+
+
+  
+  const handleCopy = async (which) => {
+    try {
+      const text = which === 'explanation' ? explainedOutput : optimizedOutput;
+      if (!text) return;
+      await navigator.clipboard.writeText(text);
+      setCopied((s) => ({ ...s, [which]: true }));
+      setTimeout(() => setCopied((s) => ({ ...s, [which]: false })), 2000);
+    } catch (err) {
+      console.error('copy failed', err);
+    }
+  }
 
 
   return (
@@ -55,18 +69,22 @@ const AIExplain = ({ loading, explainedOutput, optimizedOutput, activeTab, setAc
                     
                     <div className="space-y-3 text-slate-300 text-sm leading-relaxed">
                       <div className="pl-4 border-l-2 border-teal-500/30 space-y-2">
-                      {loading ? (
+                      {expLoading ? (
                           <p className="text-slate-400">AI is thinking...</p>
                         ) : (
-                          <pre className="whitespace-pre-wrap text-slate-300">{explainedOutput}</pre>
+                          <div className="max-h-64 overflow-y-auto scrollbar-thin rounded-md bg-slate-950/30 p-3 border border-slate-800/40">
+                            <pre className="whitespace-pre-wrap text-slate-300">{explainedOutput}</pre>
+                          </div>
                         )}
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleCopy('explanation')}
-                      className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg transition-all duration-200 text-sm font-medium"
+                      disabled={expLoading || !explainedOutput}
+                      className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     >
+
                       {copied.explanation ? (
                         <>
                           <Check className="w-4 h-4 text-green-400" />
@@ -93,7 +111,13 @@ const AIExplain = ({ loading, explainedOutput, optimizedOutput, activeTab, setAc
                     </div>
 
                     <div className="bg-slate-950/50 rounded-lg p-4 font-mono text-sm border border-slate-800/50">
-                      {optimizedOutput}
+                      {optLoading ? (
+                        <p className="text-slate-400">AI is thinking...</p>
+                      ) : (
+                        <div className="max-h-64 overflow-y-auto scrollbar-thin rounded-md bg-slate-950/30 p-3 border border-slate-800/40">
+                          <pre className="whitespace-pre-wrap text-slate-300">{optimizedOutput}</pre>
+                        </div>
+                      )}
                     </div>
 
                     <div className="text-sm text-slate-400 space-y-2">
@@ -112,7 +136,8 @@ const AIExplain = ({ loading, explainedOutput, optimizedOutput, activeTab, setAc
 
                     <button
                       onClick={() => handleCopy('optimized')}
-                      className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg transition-all duration-200 text-sm font-medium"
+                      disabled={optLoading || !optimizedOutput}
+                      className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {copied.optimized ? (
                         <>
